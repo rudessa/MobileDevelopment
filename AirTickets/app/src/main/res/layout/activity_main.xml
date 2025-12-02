@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#F0F4F8">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Поиск авиабилетов"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#1F2937"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/tvDeparture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Откуда"
+        android:textSize="14sp"
+        android:textColor="#4B5563"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="24dp"/>
+
+    <Spinner
+        android:id="@+id/spinnerDeparture"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@drawable/spinner_background"
+        android:padding="12dp"
+        app:layout_constraintTop_toBottomOf="@id/tvDeparture"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/tvArrival"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Куда"
+        android:textSize="14sp"
+        android:textColor="#4B5563"
+        app:layout_constraintTop_toBottomOf="@id/spinnerDeparture"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <Spinner
+        android:id="@+id/spinnerArrival"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@drawable/spinner_background"
+        android:padding="12dp"
+        app:layout_constraintTop_toBottomOf="@id/tvArrival"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/tvDepartureDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Дата вылета"
+        android:textSize="14sp"
+        android:textColor="#4B5563"
+        app:layout_constraintTop_toBottomOf="@id/spinnerArrival"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <EditText
+        android:id="@+id/editDepartureDate"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@drawable/edittext_background"
+        android:hint="Выберите дату"
+        android:padding="12dp"
+        android:inputType="none"
+        android:drawableEnd="@android:drawable/ic_menu_my_calendar"
+        app:layout_constraintTop_toBottomOf="@id/tvDepartureDate"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/editReturnDate"
+        app:layout_constraintWidth_percent="0.48"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"/>
+
+    <EditText
+        android:id="@+id/editReturnDate"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@drawable/edittext_background"
+        android:hint="Дата возврата"
+        android:padding="12dp"
+        android:inputType="none"
+        android:drawableEnd="@android:drawable/ic_menu_my_calendar"
+        app:layout_constraintTop_toBottomOf="@id/tvDepartureDate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/editDepartureDate"
+        app:layout_constraintWidth_percent="0.48"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"/>
+
+    <TextView
+        android:id="@+id/tvPassengers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Пассажиры"
+        android:textSize="14sp"
+        android:textColor="#4B5563"
+        app:layout_constraintTop_toBottomOf="@id/editDepartureDate"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/tvAdults"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Взрослые"
+        android:textSize="12sp"
+        android:textColor="#6B7280"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/tvPassengers"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tvChildren"
+        app:layout_constraintWidth_percent="0.31"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"/>
+
+    <TextView
+        android:id="@+id/tvChildren"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Дети"
+        android:textSize="12sp"
+        android:textColor="#6B7280"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/tvPassengers"
+        app:layout_constraintStart_toEndOf="@id/tvAdults"
+        app:layout_constraintEnd_toStartOf="@id/tvInfants"
+        app:layout_constraintWidth_percent="0.31"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"/>
+
+    <TextView
+        android:id="@+id/tvInfants"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Младенцы"
+        android:textSize="12sp"
+        android:textColor="#6B7280"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/tvPassengers"
+        app:layout_constraintStart_toEndOf="@id/tvChildren"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.31"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"/>
+
+    <EditText
+        android:id="@+id/editAdults"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@drawable/edittext_background"
+        android:hint="0"
+        android:inputType="number"
+        android:gravity="center"
+        android:padding="12dp"
+        app:layout_constraintTop_toBottomOf="@id/tvAdults"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/editChildren"
+        app:layout_constraintWidth_percent="0.31"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"/>
+
+    <EditText
+        android:id="@+id/editChildren"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@drawable/edittext_background"
+        android:hint="0"
+        android:inputType="number"
+        android:gravity="center"
+        android:padding="12dp"
+        app:layout_constraintTop_toBottomOf="@id/tvChildren"
+        app:layout_constraintStart_toEndOf="@id/editAdults"
+        app:layout_constraintEnd_toStartOf="@id/editInfants"
+        app:layout_constraintWidth_percent="0.31"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"/>
+
+    <EditText
+        android:id="@+id/editInfants"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@drawable/edittext_background"
+        android:hint="0"
+        android:inputType="number"
+        android:gravity="center"
+        android:padding="12dp"
+        app:layout_constraintTop_toBottomOf="@id/tvInfants"
+        app:layout_constraintStart_toEndOf="@id/editChildren"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.31"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="8dp"/>
+
+    <Button
+        android:id="@+id/btnSearch"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:text="Найти билеты"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:backgroundTint="#2563EB"
+        app:layout_constraintTop_toBottomOf="@id/editAdults"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Flight Search</string>
+
+    <!-- Массив городов для выбора -->
+    <string-array name="cities">
+        <item>Выберите город</item>
+        <item>Москва</item>
+        <item>Санкт-Петербург</item>
+        <item>Новосибирск</item>
+        <item>Екатеринбург</item>
+        <item>Казань</item>
+        <item>Нижний Новгород</item>
+        <item>Челябинск</item>
+        <item>Самара</item>
+        <item>Омск</item>
+        <item>Ростов-на-Дону</item>
+        <item>Уфа</item>
+        <item>Красноярск</item>
+        <item>Воронеж</item>
+        <item>Пермь</item>
+        <item>Волгоград</item>
+    </string-array>
+</resources>
