@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PeopleListK</string>
+
+    <string-array name="names">
+        <item>Иван</item>
+        <item>Петр</item>
+        <item>Алексей</item>
+        <item>Дмитрий</item>
+        <item>Максим</item>
+    </string-array>
+
+    <string-array name="surnames">
+        <item>Иванов</item>
+        <item>Петров</item>
+        <item>Сидоров</item>
+        <item>Кузнецов</item>
+        <item>Смирнов</item>
+    </string-array>
+</resources>
