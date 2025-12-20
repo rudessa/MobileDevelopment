@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">RecyclerViewK25</string>
+    <string name="template">#%1$08x</string>
+</resources>
