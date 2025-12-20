@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">CurrentWeatherDataBinding</string>
+
+    <!-- UI Labels -->
+    <string name="app_title">Погода</string>
+    <string name="select_city">📍 Выберите город</string>
+    <string name="button_refresh">🔄 Обновить данные</string>
+
+    <!-- Weather Details Labels -->
+    <string name="label_humidity">Влажность</string>
+    <string name="label_pressure">Давление</string>
+    <string name="label_wind">Ветер</string>
+
+    <!-- Emojis -->
+    <string name="emoji_humidity">💧</string>
+    <string name="emoji_pressure">🌡️</string>
+    <string name="emoji_wind">🌬️</string>
+
+    <!-- Formats -->
+    <string name="temperature_format">%s</string>
+    <string name="feels_like_format">Ощущается как %s</string>
+    <string name="humidity_format">Влажность: %s</string>
+    <string name="pressure_format">Давление: %s</string>
+    <string name="wind_format">Ветер: %s</string>
+</resources>
