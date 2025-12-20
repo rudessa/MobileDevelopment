@@ -6,15 +6,24 @@
     <string name="select_city">📍 Выберите город</string>
     <string name="button_refresh">🔄 Обновить данные</string>
 
+    <!-- Settings -->
+    <string name="settings_title">⚙️ Настройки</string>
+    <string name="temperature_unit">Единица температуры:</string>
+    <string name="celsius">Цельсий (°C)</string>
+    <string name="fahrenheit">Фаренгейт (°F)</string>
+    <string name="show_wind_direction">Показать направление ветра</string>
+
     <!-- Weather Details Labels -->
     <string name="label_humidity">Влажность</string>
     <string name="label_pressure">Давление</string>
     <string name="label_wind">Ветер</string>
+    <string name="label_wind_direction">Направление ветра</string>
 
     <!-- Emojis -->
     <string name="emoji_humidity">💧</string>
     <string name="emoji_pressure">🌡️</string>
     <string name="emoji_wind">🌬️</string>
+    <string name="emoji_compass">🧭</string>
 
     <!-- Formats -->
     <string name="temperature_format">%s</string>
@@ -22,4 +31,34 @@
     <string name="humidity_format">Влажность: %s</string>
     <string name="pressure_format">Давление: %s</string>
     <string name="wind_format">Ветер: %s</string>
+
+    <!-- Cities Array -->
+    <string-array name="cities_array">
+        <item>Moscow</item>
+        <item>Saint Petersburg</item>
+        <item>Novosibirsk</item>
+        <item>Yekaterinburg</item>
+        <item>Kazan</item>
+        <item>Sochi</item>
+        <item>London</item>
+        <item>Paris</item>
+        <item>Berlin</item>
+        <item>Rome</item>
+        <item>Madrid</item>
+        <item>Amsterdam</item>
+        <item>Vienna</item>
+        <item>Prague</item>
+        <item>Stockholm</item>
+        <item>Tokyo</item>
+        <item>Seoul</item>
+        <item>Beijing</item>
+        <item>Shanghai</item>
+        <item>Dubai</item>
+        <item>New York</item>
+        <item>Los Angeles</item>
+        <item>Chicago</item>
+        <item>Toronto</item>
+        <item>Sydney</item>
+        <item>Melbourne</item>
+    </string-array>
 </resources>

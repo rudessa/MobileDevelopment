@@ -78,8 +78,15 @@ class WeatherRepository {
             }
 
             val windObject = jsonObject.getJSONObject("wind")
+            val windDeg = if (windObject.has("deg")) {
+                windObject.getInt("deg")
+            } else {
+                0
+            }
+
             val wind = Wind(
-                speed = windObject.getDouble("speed")
+                speed = windObject.getDouble("speed"),
+                deg = windDeg
             )
 
             val result = WeatherResponse(

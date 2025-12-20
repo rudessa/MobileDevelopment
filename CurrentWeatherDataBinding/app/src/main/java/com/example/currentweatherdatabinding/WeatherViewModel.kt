@@ -21,6 +21,20 @@ class WeatherViewModel : ViewModel() {
     private val _errorMessage = MutableLiveData<String?>()
     val errorMessage: LiveData<String?> = _errorMessage
 
+    private val _isCelsius = MutableLiveData<Boolean>(true)
+    val isCelsius: LiveData<Boolean> = _isCelsius
+
+    private val _showWindDirection = MutableLiveData<Boolean>(false)
+    val showWindDirection: LiveData<Boolean> = _showWindDirection
+
+    fun setTemperatureUnit(celsius: Boolean) {
+        _isCelsius.value = celsius
+    }
+
+    fun setShowWindDirection(show: Boolean) {
+        _showWindDirection.value = show
+    }
+
     fun loadWeather(city: String) {
         Log.d("WeatherViewModel", "loadWeather called for city: $city")
         Log.d("WeatherViewModel", "isLoading current value: ${_isLoading.value}")
@@ -51,7 +65,9 @@ class WeatherViewModel : ViewModel() {
                         humidity = response.main.humidity,
                         pressure = response.main.pressure,
                         windSpeed = response.wind.speed,
-                        icon = response.weather.firstOrNull()?.icon ?: ""
+                        windDeg = response.wind.deg,
+                        icon = response.weather.firstOrNull()?.icon ?: "",
+                        isCelsius = _isCelsius.value ?: true
                     )
                     Log.d("WeatherViewModel", "Setting weatherData: $weatherData")
                     _weatherData.value = weatherData
