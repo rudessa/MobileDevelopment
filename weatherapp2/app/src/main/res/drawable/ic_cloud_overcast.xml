@@ -1,0 +1,13 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Overcast clouds -->
+    <path
+        android:fillColor="#82B1FF"
+        android:pathData="M6,8 C3.79,8 2,9.79 2,12 C2,14.21 3.79,16 6,16 L18,16 C19.66,16 21,14.66 21,13 C21,11.34 19.66,10 18,10 C17.72,10 17.46,10.04 17.21,10.11 C16.71,8.33 15.07,7 13.1,7 C11.4,7 9.91,7.95 9.14,9.35 C8.48,8.52 7.29,8 6,8 Z" />
+    <path
+        android:fillColor="#448AFF"
+        android:pathData="M9,5 C7.62,5 6.5,6.12 6.5,7.5 C6.5,7.84 6.57,8.17 6.69,8.47 C7.42,8.17 8.19,8 9,8 C9.35,8 9.7,8.03 10.04,8.1 C10.53,6.9 11.57,6 12.83,5.77 C12.25,5.29 11.5,5 10.67,5 Z" />
+</vector>

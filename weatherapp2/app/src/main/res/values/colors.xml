@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Main palette - light blue theme -->
+    <color name="primary_blue">#2979FF</color>
+    <color name="accent_blue">#448AFF</color>
+    <color name="light_blue">#82B1FF</color>
+    <color name="background_main">#EEF4FF</color>
+    <color name="card_blue">#FFFFFF</color>
+    <color name="city_item_bg">#FFFFFF</color>
+    <color name="city_item_selected_bg">#2979FF</color>
+
+    <!-- Text -->
+    <color name="text_primary">#1A237E</color>
+    <color name="text_secondary">#7986CB</color>
+    <color name="city_text">#283593</color>
+    <color name="selected_city_text">#FFFFFF</color>
+
+    <!-- UI elements -->
+    <color name="divider_color">#C5CAE9</color>
+    <color name="info_block_bg">#F0F4FF</color>
+
+    <!-- System -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>
