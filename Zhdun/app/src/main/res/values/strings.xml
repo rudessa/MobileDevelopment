@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ждун</string>
+    <string name="app_title">Ждун</string>
+    <string name="app_subtitle">терпеливо наблюдает за временем</string>
+    <string name="initial_status">время созерцания: 0 мин.</string>
+    <string name="contemplation_time">время созерцания: %d мин.</string>
+    <string name="battery_low_text">накормите Ждуна, силы на исходе!</string>
+    <string name="btn_stop">Надоело ждать?</string>
+    <string name="toast_text">Ждун отдыхает. Он подождёт ещё… когда-нибудь.</string>
+    <string name="mood_calm">😌</string>
+    <string name="mood_patient">🧘</string>
+    <string name="mood_deep">🌀</string>
+    <string name="mood_eternal">♾️</string>
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg_main">#0F0F1A</color>
+    <color name="card_bg">#1C1C2E</color>
+    <color name="text_primary">#E8E8F0</color>
+    <color name="text_accent">#A78BFA</color>
+    <color name="text_muted">#6B6B80</color>
+    <color name="btn_bg">#2D2B55</color>
+    <color name="btn_text">#C4B5FD</color>
+    <color name="btn_stroke">#4C4A8A</color>
+    <color name="battery_low_color">#F87171</color>
+    <color name="colorPrimary">#A78BFA</color>
+    <color name="colorPrimaryDark">#7C3AED</color>
+    <color name="colorAccent">#C4B5FD</color>
+</resources>
