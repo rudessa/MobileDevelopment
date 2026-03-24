@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.NavigationDrawerDemo" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/isu_blue_main</item>
+        <item name="colorPrimaryVariant">@color/isu_blue_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/isu_blue_light</item>
+        <item name="colorSecondaryVariant">@color/isu_blue_dark</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="android:statusBarColor">@color/isu_blue_dark</item>
+    </style>
+</resources>
