@@ -1,12 +1,16 @@
 ﻿package com.example.criptohub
 
+import android.Manifest
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,10 +30,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.core.content.ContextCompat
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.example.criptohub.model.QuoteHistoryItem
 import com.example.criptohub.service.CryptoQuoteService
 import com.example.criptohub.ui.theme.CriptoHubTheme
@@ -40,9 +44,17 @@ import java.util.Locale
 class MainActivity : ComponentActivity() {
 
     private var currentSymbol by mutableStateOf("BTC")
+    private var changeThresholdInput by mutableStateOf("1.0")
     private var latestQuote by mutableStateOf<QuoteHistoryItem?>(null)
     private var history by mutableStateOf(emptyList<QuoteHistoryItem>())
     private var statusMessage by mutableStateOf("Сервис остановлен")
+
+    private val requestNotificationPermission =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            if (!granted) {
+                statusMessage = "Разрешение на уведомления не выдано"
+            }
+        }
 
     private val quoteReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -72,6 +84,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ensureNotificationPermissionIfNeeded()
 
         setContent {
             CriptoHubTheme {
@@ -82,10 +95,12 @@ class MainActivity : ComponentActivity() {
                             .padding(innerPadding)
                             .padding(16.dp),
                         symbol = currentSymbol,
+                        threshold = changeThresholdInput,
                         latestQuote = latestQuote,
                         history = history,
                         status = statusMessage,
                         onSymbolChange = { currentSymbol = it.uppercase(Locale.getDefault()) },
+                        onThresholdChange = { changeThresholdInput = it },
                         onStartClick = { startQuoteService() },
                         onStopClick = { stopQuoteService() }
                     )
@@ -115,11 +130,20 @@ class MainActivity : ComponentActivity() {
 
     private fun startQuoteService() {
         val symbol = currentSymbol.trim().ifEmpty { "BTC" }.uppercase(Locale.getDefault())
+        if (!canPostNotifications()) {
+            statusMessage = "Разрешите уведомления в системных настройках приложения"
+            ensureNotificationPermissionIfNeeded()
+            return
+        }
+        val thresholdUsd = parseThresholdOrDefault(changeThresholdInput)
+
         currentSymbol = symbol
-        statusMessage = "Сервис запущен для $symbol, запрашиваю котировку..."
+        changeThresholdInput = String.format(Locale.US, "%.2f", thresholdUsd)
+        statusMessage = "Сервис запущен для $symbol, порог USD ${changeThresholdInput}, запрашиваю котировку..."
 
         val intent = Intent(this, CryptoQuoteService::class.java).apply {
             putExtra(CryptoQuoteService.EXTRA_SYMBOL, symbol)
+            putExtra(CryptoQuoteService.EXTRA_CHANGE_THRESHOLD_USD, thresholdUsd)
         }
         startService(intent)
     }
@@ -129,9 +153,35 @@ class MainActivity : ComponentActivity() {
         statusMessage = "Сервис остановлен"
     }
 
+    private fun parseThresholdOrDefault(rawInput: String): Double {
+        val normalized = rawInput.trim().replace(',', '.')
+        val value = normalized.toDoubleOrNull() ?: DEFAULT_CHANGE_THRESHOLD_USD
+        return if (value > 0.0) value else DEFAULT_CHANGE_THRESHOLD_USD
+    }
+
+    private fun ensureNotificationPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+
+        if (canPostNotifications()) {
+            return
+        }
+
+        requestNotificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+    }
+
+    private fun canPostNotifications(): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return true
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
+            PackageManager.PERMISSION_GRANTED
+    }
+
     private fun formatDateTime(timestamp: Long): String {
         val formatter = SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault())
         return formatter.format(Date(timestamp))
+    }
+
+    companion object {
+        private const val DEFAULT_CHANGE_THRESHOLD_USD = 1.0
     }
 }
 
@@ -139,10 +189,12 @@ class MainActivity : ComponentActivity() {
 private fun QuoteScreen(
     modifier: Modifier,
     symbol: String,
+    threshold: String,
     latestQuote: QuoteHistoryItem?,
     history: List<QuoteHistoryItem>,
     status: String,
     onSymbolChange: (String) -> Unit,
+    onThresholdChange: (String) -> Unit,
     onStartClick: () -> Unit,
     onStopClick: () -> Unit
 ) {
@@ -160,6 +212,14 @@ private fun QuoteScreen(
             value = symbol,
             onValueChange = onSymbolChange,
             label = { Text("Символ, например BTC") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        OutlinedTextField(
+            value = threshold,
+            onValueChange = onThresholdChange,
+            label = { Text("Порог уведомления, USD") },
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
@@ -219,5 +279,3 @@ private fun formatTimestamp(timestamp: Long): String {
 }
 
 private fun formatNumber(value: Double): String = String.format(Locale.US, "%.2f", value)
-
-
