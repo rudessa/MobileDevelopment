@@ -13,12 +13,22 @@ sealed class WeatherUiState {
     data class Error(val message: String) : WeatherUiState()
 }
 
+sealed class ForecastUiState {
+    object Idle : ForecastUiState()
+    object Loading : ForecastUiState()
+    data class Success(val data: ForecastData) : ForecastUiState()
+    data class Error(val message: String) : ForecastUiState()
+}
+
 class WeatherViewModel : ViewModel() {
 
     private val repository = WeatherRepository()
 
     private val _weatherState = MutableLiveData<WeatherUiState>(WeatherUiState.Idle)
     val weatherState: LiveData<WeatherUiState> = _weatherState
+
+    private val _forecastState = MutableLiveData<ForecastUiState>(ForecastUiState.Idle)
+    val forecastState: LiveData<ForecastUiState> = _forecastState
 
     private val _capitalWeather = MutableLiveData<Map<String, WeatherData>>()
     val capitalWeather: LiveData<Map<String, WeatherData>> = _capitalWeather
@@ -28,11 +38,18 @@ class WeatherViewModel : ViewModel() {
     fun searchCity(cityName: String) {
         if (cityName.isBlank()) return
         _weatherState.value = WeatherUiState.Loading
+        _forecastState.value = ForecastUiState.Loading
         viewModelScope.launch {
-            val result = repository.getWeather(cityName)
-            _weatherState.value = result.fold(
+            val weatherResult = repository.getWeather(cityName)
+            _weatherState.value = weatherResult.fold(
                 onSuccess = { WeatherUiState.Success(it) },
-                onFailure = { WeatherUiState.Error(it.message ?: "Неизвестная ошибка") }
+                onFailure = { WeatherUiState.Error(it.message ?: "Unknown error") }
+            )
+
+            val forecastResult = repository.getForecast(cityName)
+            _forecastState.value = forecastResult.fold(
+                onSuccess = { ForecastUiState.Success(it) },
+                onFailure = { ForecastUiState.Error(it.message ?: "Unknown error") }
             )
         }
     }
@@ -49,6 +66,9 @@ class WeatherViewModel : ViewModel() {
     }
 
     fun loadAllCapitals() {
-        capitals.forEach { loadCapitalWeather(it) }
+        viewModelScope.launch {
+            val weatherByCity = repository.getWeatherForCitiesSequentially(capitals.map { it.nameEn })
+            _capitalWeather.value = weatherByCity
+        }
     }
 }

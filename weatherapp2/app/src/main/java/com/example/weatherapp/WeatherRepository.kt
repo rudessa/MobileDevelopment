@@ -1,21 +1,30 @@
 package com.example.weatherapp
 
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class WeatherRepository {
 
     private val api: WeatherApiService by lazy {
+        val logging = HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
+
+        val client = OkHttpClient.Builder()
+            .addInterceptor(logging)
+            .build()
+
         Retrofit.Builder()
             .baseUrl("https://api.openweathermap.org/data/2.5/")
+            .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(WeatherApiService::class.java)
     }
 
     companion object {
-        const val API_KEY = "671e179122dbf98f921533ca23b06ea3"
-
         private val cityTranslations = mapOf(
             // Россия
             "москва" to "Moscow",
@@ -198,8 +207,12 @@ class WeatherRepository {
 
     suspend fun getWeather(city: String): Result<WeatherData> {
         val queryCity = translateCity(city)
+        val apiKey = BuildConfig.OPEN_WEATHER_API_KEY
+        if (apiKey.isBlank()) {
+            return Result.failure(Exception("API key is missing. Set OPEN_WEATHER_API_KEY in local.properties"))
+        }
         return try {
-            val response = api.getWeatherByCity(queryCity, API_KEY)
+            val response = api.getWeatherByCity(queryCity, apiKey)
             Result.success(
                 WeatherData(
                     cityName = response.name,
@@ -224,6 +237,63 @@ class WeatherRepository {
         } catch (e: Exception) {
             Result.failure(Exception("Произошла ошибка: ${e.message}"))
         }
+    }
+
+    suspend fun getForecast(city: String): Result<ForecastData> {
+        val queryCity = translateCity(city)
+        val apiKey = BuildConfig.OPEN_WEATHER_API_KEY
+        if (apiKey.isBlank()) {
+            return Result.failure(Exception("API key is missing. Set OPEN_WEATHER_API_KEY in local.properties"))
+        }
+        return try {
+            val response = api.getForecastByCity(queryCity, apiKey)
+            val forecastItems = response.list
+                .asSequence()
+                .filterIndexed { index, _ -> index % 8 == 0 }
+                .take(5)
+                .map { item ->
+                    ForecastItem(
+                        dateTime = item.dt_txt,
+                        temperature = item.main.temp,
+                        feelsLike = item.main.feels_like,
+                        humidity = item.main.humidity,
+                        windSpeed = item.wind.speed,
+                        cloudiness = item.clouds.all,
+                        description = item.weather.firstOrNull()?.description?.replaceFirstChar { it.uppercase() } ?: "",
+                        iconCode = item.weather.firstOrNull()?.icon ?: "01d"
+                    )
+                }
+                .toList()
+
+            Result.success(
+                ForecastData(
+                    cityName = response.city.name,
+                    country = response.city.country,
+                    items = forecastItems
+                )
+            )
+        } catch (e: retrofit2.HttpException) {
+            when (e.code()) {
+                404 -> Result.failure(Exception("Город не найден: $city"))
+                401 -> Result.failure(Exception("Ошибка авторизации API"))
+                else -> Result.failure(Exception("Ошибка сети: ${e.code()}"))
+            }
+        } catch (e: java.net.UnknownHostException) {
+            Result.failure(Exception("Нет подключения к интернету"))
+        } catch (e: Exception) {
+            Result.failure(Exception("Произошла ошибка: ${e.message}"))
+        }
+    }
+
+    suspend fun getWeatherForCitiesSequentially(cities: List<String>): Map<String, WeatherData> {
+        val result = linkedMapOf<String, WeatherData>()
+        for (city in cities) {
+            val weatherResult = getWeather(city)
+            weatherResult.onSuccess { data ->
+                result[city] = data
+            }
+        }
+        return result
     }
 
     fun getCapitals(): List<CapitalCity> = listOf(

@@ -36,8 +36,10 @@ class CapitalAdapter(
 
             val weather = weatherMap[capital.nameEn]
             if (weather != null) {
-                binding.textCapitalTemp.text = "${weather.temperature.toInt()}°C"
-                binding.textCapitalHumidity.text = "💧 ${weather.humidity}%"
+                binding.textCapitalTemp.text =
+                    binding.root.context.getString(R.string.temperature_celsius, weather.temperature.toInt())
+                binding.textCapitalHumidity.text =
+                    binding.root.context.getString(R.string.capital_humidity, weather.humidity)
 
                 val cloudIcon = when {
                     weather.cloudiness < 20 -> R.drawable.ic_cloud_clear
@@ -57,6 +59,7 @@ class CapitalAdapter(
     class DiffCallback : DiffUtil.ItemCallback<CapitalCity>() {
         override fun areItemsTheSame(oldItem: CapitalCity, newItem: CapitalCity) =
             oldItem.nameEn == newItem.nameEn
+
         override fun areContentsTheSame(oldItem: CapitalCity, newItem: CapitalCity) =
             oldItem == newItem
     }

@@ -12,6 +12,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
 import com.example.weatherapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -19,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val viewModel: WeatherViewModel by viewModels()
     private lateinit var capitalAdapter: CapitalAdapter
+    private val useWorkManagerDemo = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,10 +41,55 @@ class MainActivity : AppCompatActivity() {
         setupCapitalsList()
         observeViewModel()
 
-        // Load all capitals weather on start
-        viewModel.loadAllCapitals()
-        // Show Moscow weather by default
+        if (useWorkManagerDemo) {
+            enqueueWeatherWork()
+        } else {
+            viewModel.loadAllCapitals()
+        }
         viewModel.searchCity("Moscow")
+    }
+
+    private fun enqueueWeatherWork() {
+        val cities = viewModel.capitals.map { it.nameEn }
+        if (cities.isEmpty()) return
+
+        val requests = cities.map { city ->
+            OneTimeWorkRequestBuilder<WeatherWorker>()
+                .setInputData(workDataOf(WeatherWorker.KEY_CITY to city))
+                .build()
+        }
+
+        val workManager = WorkManager.getInstance(this)
+        var continuation = workManager.beginUniqueWork(
+            WEATHER_CHAIN_NAME,
+            ExistingWorkPolicy.REPLACE,
+            requests.first()
+        )
+
+        requests.drop(1).forEach { request ->
+            continuation = continuation.then(request)
+        }
+
+        continuation.enqueue()
+
+        workManager.getWorkInfosForUniqueWorkLiveData(WEATHER_CHAIN_NAME).observe(this) { infos ->
+            if (infos.isNullOrEmpty()) return@observe
+            val finished = infos.all { it.state.isFinished }
+            if (!finished) return@observe
+
+            val successCount = infos.count {
+                it.outputData.getString(WeatherWorker.KEY_OUTPUT_STATUS) == "success"
+            }
+            val failureCount = infos.count {
+                it.outputData.getString(WeatherWorker.KEY_OUTPUT_STATUS) == "failure"
+            }
+
+            Toast.makeText(
+                this,
+                "WorkManager chain finished: success=$successCount, failure=$failureCount",
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
 
     private fun setupSearch() {
@@ -51,14 +101,16 @@ class MainActivity : AppCompatActivity() {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 performSearch()
                 true
-            } else false
+            } else {
+                false
+            }
         }
     }
 
     private fun performSearch() {
         val query = binding.editTextCity.text?.toString()?.trim() ?: ""
         if (query.isBlank()) {
-            Toast.makeText(this, "Введите название города", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.enter_city_name), Toast.LENGTH_SHORT).show()
             return
         }
         hideKeyboard()
@@ -71,9 +123,8 @@ class MainActivity : AppCompatActivity() {
             binding.editTextCity.setText(capital.name)
         }
 
-        // HORIZONTAL scroll
         binding.recyclerViewCapitals.layoutManager =
-            LinearLayoutManager(applicationContext, LinearLayoutManager.HORIZONTAL, false)
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.recyclerViewCapitals.adapter = capitalAdapter
         capitalAdapter.submitList(viewModel.capitals)
     }
@@ -112,15 +163,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateWeatherUI(weather: WeatherData) {
-        binding.textViewCityName.text = "${weather.cityName}, ${weather.country}"
-        binding.textViewTemperature.text = "${weather.temperature.toInt()}°C"
-        binding.textViewFeelsLike.text = "Ощущается как ${weather.feelsLike.toInt()}°C"
+        binding.textViewCityName.text =
+            getString(R.string.city_country, weather.cityName, weather.country)
+        binding.textViewTemperature.text =
+            getString(R.string.temperature_celsius, weather.temperature.toInt())
+        binding.textViewFeelsLike.text =
+            getString(R.string.feels_like_celsius, weather.feelsLike.toInt())
         binding.textViewDescription.text = weather.description
-        binding.textViewHumidityValue.text = "${weather.humidity}%"
-        binding.textViewWindValue.text = "${weather.windSpeed} м/с"
-        binding.textViewCloudinessValue.text = "${weather.cloudiness}%"
+        binding.textViewHumidityValue.text =
+            getString(R.string.humidity_percent, weather.humidity)
+        binding.textViewWindValue.text =
+            getString(R.string.wind_meters_per_second, weather.windSpeed)
+        binding.textViewCloudinessValue.text =
+            getString(R.string.humidity_percent, weather.cloudiness)
 
-        // Wind icon
         val windIcon = when {
             weather.windSpeed < 5 -> R.drawable.ic_wind_calm
             weather.windSpeed < 15 -> R.drawable.ic_wind_moderate
@@ -128,7 +184,6 @@ class MainActivity : AppCompatActivity() {
         }
         binding.imageViewWind.setImageResource(windIcon)
 
-        // Cloud icon
         val cloudIcon = when {
             weather.cloudiness < 20 -> R.drawable.ic_cloud_clear
             weather.cloudiness < 60 -> R.drawable.ic_cloud_partial
@@ -140,5 +195,9 @@ class MainActivity : AppCompatActivity() {
     private fun hideKeyboard() {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.editTextCity.windowToken, 0)
+    }
+
+    companion object {
+        private const val WEATHER_CHAIN_NAME = "weather_forecast_chain"
     }
 }
