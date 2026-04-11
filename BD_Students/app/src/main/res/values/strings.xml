@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">BD_Students</string>
+    <string name="student">Student</string>
+    <string name="subject">Subject</string>
+    <string name="student_subjects">Student subjects</string>
+    <string name="students_study">Students study</string>
+    <string name="empty_results">No related records found</string>
+</resources>
