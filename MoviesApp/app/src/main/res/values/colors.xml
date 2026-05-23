@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#1A1A2E</color>
+    <color name="primary_dark">#16213E</color>
+    <color name="accent">#E94560</color>
+    <color name="card_background">#1E2A3A</color>
+    <color name="background">#0D1B2A</color>
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#B0BEC5</color>
+    <color name="rating_star">#FFD700</color>
+    <color name="watchlist_check">#4CAF50</color>
+
+    <!-- Цвета жанров -->
+    <color name="genre_action">#C62828</color>
+    <color name="genre_drama">#1565C0</color>
+    <color name="genre_comedy">#E65100</color>
+    <color name="genre_scifi">#6A1B9A</color>
+    <color name="genre_thriller">#2E7D32</color>
+    <color name="genre_adventure">#00838F</color>
+    <color name="genre_horror">#37474F</color>
+    <color name="genre_biography">#4E342E</color>
+</resources>

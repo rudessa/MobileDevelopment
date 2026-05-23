@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">КиноГид</string>
+    <string name="tab_now_playing">Сейчас</string>
+    <string name="tab_top_rated">Топ</string>
+    <string name="tab_watchlist">Список</string>
+    <string name="empty_watchlist">Список пуст.\n\nДобавьте фильмы с других вкладок!</string>
+    <string name="add_to_watchlist">+ В список</string>
+    <string name="in_watchlist">✓ В списке</string>
+    <string name="clear_watched">Очистить просмотренные</string>
+</resources>
